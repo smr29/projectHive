@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  FlatList,
-  Alert,
-} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { Appbar, Card, List } from 'react-native-paper';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
 
@@ -34,7 +25,7 @@ export default function ProjectsScreen({ navigation }: Props) {
   };
 
   const renderProjectItem = ({ item }: { item: Project }) => (
-    <View style={styles.projectCard}>
+    <Card style={styles.projectCard}>
       <Text style={styles.projectTitle}>{item.name}</Text>
       <Text style={styles.projectDetails}>Course: {item.course}</Text>
       <Text style={styles.projectDetails}>Team Size: {item.teamSize}</Text>
@@ -60,13 +51,17 @@ export default function ProjectsScreen({ navigation }: Props) {
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </Card>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Project List</Text>
+      <Appbar.Header style={styles.header}>
+        <Appbar.Action icon="menu" onPress={() => {}} />
+        <Appbar.Content title="Projects" titleStyle={styles.headerTitle} />
+      </Appbar.Header>
+
+      <View style={styles.headerContainer}>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate('AddProject')}
@@ -92,18 +87,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   header: {
-    padding: 16,
-    backgroundColor: '#f3f4f6',
-    borderBottomWidth: 1,
-    borderColor: '#e5e7eb',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    backgroundColor: '#057C7C',
+    elevation: 4,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
+  headerTitle: {
+    color: 'white',
+    fontSize: 20,
+  },
+  headerContainer: {
+    padding: 16,
+    backgroundColor: '#F3F4F6',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    borderBottomWidth: 1,
+    borderColor: '#E5E7EB',
   },
   addButton: {
     backgroundColor: '#7C3AED',
