@@ -1,7 +1,10 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+// /app/tabs/_layout.tsx
+import { View, Text } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import AddEditView from './AddEditView';
+import RegisterTeam from './RegisterTeam';
 
+<<<<<<< HEAD
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
@@ -13,8 +16,13 @@ import AddEditView from './AddEditView';  // Import Add/Edit View
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+=======
+const Tab = createBottomTabNavigator();
+>>>>>>> 555d82c24f49187233926f2593404bdea682fa11
 
+export default function TabsLayout() {
   return (
+<<<<<<< HEAD
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -75,5 +83,11 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+=======
+    <Tab.Navigator>
+      <Tab.Screen name="AddEdit" component={AddEditView} options={{ title: 'Add/Edit View' }} />
+      <Tab.Screen name="Register" component={RegisterTeam} options={{ title: 'Register Team' }} />
+    </Tab.Navigator>
+>>>>>>> 555d82c24f49187233926f2593404bdea682fa11
   );
 }

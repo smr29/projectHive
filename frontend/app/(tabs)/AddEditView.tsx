@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { Appbar, Card, List } from 'react-native-paper';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RootStackParamList } from '../navigation/types';
+import type { RootTabParamList } from '@/navigation/types';
 
 type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Projects'>;
+  navigation: NativeStackNavigationProp<RootTabParamList, 'Projects'>;
 };
 
 type Project = {
