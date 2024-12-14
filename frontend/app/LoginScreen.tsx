@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RootStackParamList } from '../navigation/types';
+import type { RootTabParamList } from '@/navigation/types';
+import { useRouter } from 'expo-router';
 
-type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
-};
+// type Props = {
+//   navigation: NativeStackNavigationProp<RootTabParamList, 'Login'>;
+// };
 
-export default function LoginScreen({ navigation }: Props) {
+export default function LoginScreen() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -15,7 +17,9 @@ export default function LoginScreen({ navigation }: Props) {
 
   const handleLogin = () => {
     // Handle login logic here
-    navigation.navigate('Home');
+    // navigation.navigate('Home');
+    console.log('hi')
+    router.push('/(tabs)/RegisterTeam')
   };
 
   return (
@@ -57,7 +61,7 @@ export default function LoginScreen({ navigation }: Props) {
 
         <TouchableOpacity
           style={styles.linkButton}
-          onPress={() => navigation.navigate('Register')}
+          onPress={() => router.replace('/RegisterScreen')}
         >
           <Text style={styles.linkText}>
             Don't have an account? <Text style={styles.link}>Register</Text>

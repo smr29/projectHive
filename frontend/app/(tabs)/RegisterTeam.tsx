@@ -12,10 +12,10 @@ import {
 } from 'react-native';
 
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RootStackParamList } from '../navigation/types';
+import type { RootTabParamList } from '@/navigation/types';
 
 type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>;
+  navigation: NativeStackNavigationProp<RootTabParamList, 'Register'>;
 };
 
 export default function RegisterTeamScreen({ navigation }: Props) {
