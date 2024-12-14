@@ -1,74 +1,155 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import React from 'react';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, ScrollView, Dimensions } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { HelloWave } from '@/components/HelloWave';
+import { Picker } from '@react-native-picker/picker';
 
-export default function HomeScreen() {
+export default function WelcomeScreen() {
+  const navigation = useNavigation();
+  const screenHeight = Dimensions.get('window').height;
+  const screenWidth = Dimensions.get('window').width;
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={[styles.scrollContent, { minHeight: screenHeight }]}>
+        {/* Header */}
+        <View style={styles.header}>
+          <View style={styles.logoContainer}>
+            <View style={styles.logoIcon}>
+              <Text style={styles.logoText}>p</Text>
+            </View>
+            <Text style={styles.logoTitle}>projectHive</Text>
+          </View>
+        </View>
+
+        {/* Main Content */}
+        <View style={styles.content}>
+          <Image
+            source={require('@/assets/images/PM.png')}
+            style={[styles.illustration, { width: screenWidth * 0.75 }]}  // Responsive width
+            accessible
+            accessibilityLabel="Welcome Illustration"
+          />
+        </View>
+
+        {/* Additional Content */}
+        <ThemedView style={styles.titleContainer}>
+          <ThemedText type="title" style={styles.projectHiveText}>
+            Welcome to Project Hive!
+          </ThemedText>
+          <HelloWave />
+        </ThemedView>
+
+        {/* Buttons */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={() => navigation.navigate('Login')}
+            accessible
+            accessibilityLabel="Navigate to Login"
+          >
+            <Text style={styles.buttonText}>LOGIN</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.primaryButton, styles.secondaryButton]}
+            onPress={() => navigation.navigate('SignUp')}
+            accessible
+            accessibilityLabel="Navigate to Sign Up"
+          >
+            <Text style={[styles.buttonText, styles.secondaryButtonText]}>SIGN UP</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: '#F3F4F6',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'space-between',
+    paddingBottom: 32, // More space at the bottom for better balance
+  },
+  header: {
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    backgroundColor: '#7C3AED',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'space-between',  // Align logo to the left and title to the right
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  logoIcon: {
+    width: 60,   // Increased size for better visibility
+    height: 60,  // Keep width and height equal for a perfect circle
+    borderRadius: 30,  // Half of width/height to make it a perfect circle
+    backgroundColor: '#4ADE90',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  logoText: {
+    color: '#FFFFFF',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  logoTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  content: {
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  illustration: {
+    height: 200,
+    resizeMode: 'contain',
+  },
+  titleContainer: {
+    paddingHorizontal: 16,
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  projectHiveText: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#1F2937',
+    textAlign: 'center',  // Center align the title
+    marginBottom: 12,
+  },
+  buttonContainer: {
+    paddingHorizontal: 20,
+    marginBottom: 40, // Increased margin at the bottom
+  },
+  primaryButton: {
+    backgroundColor: '#2563EB',
+    paddingVertical: 14,
+    borderRadius: 10,
+    marginBottom: 18, // More space between buttons
+    alignItems: 'center',
+  },
+  secondaryButton: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#2563EB',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  secondaryButtonText: {
+    color: '#2563EB',
   },
 });
