@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RootTabParamList } from '@/navigation/types';
-import { useRouter } from 'expo-router';
+import type { RootStackParamList } from '../navigation/types';
 
-// type Props = {
-//   navigation: NativeStackNavigationProp<RootTabParamList, 'Login'>;
-// };
+type Props = {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
+};
 
-export default function LoginScreen() {
-  const router = useRouter()
+export default function LoginScreen({ navigation }: Props) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -17,7 +15,6 @@ export default function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = () => {
-<<<<<<< HEAD:frontend/app/(tabs)/login-sceen.tsx
     const { email, password } = formData;
 
     // Basic validation
@@ -33,12 +30,6 @@ export default function LoginScreen() {
       // Navigate to Home screen after successful login
       navigation.navigate('Home');
     }, 1000);
-=======
-    // Handle login logic here
-    // navigation.navigate('Home');
-    console.log('hi')
-    router.push('/(tabs)/RegisterTeam')
->>>>>>> 555d82c24f49187233926f2593404bdea682fa11:frontend/app/LoginScreen.tsx
   };
 
   return (
@@ -88,7 +79,7 @@ export default function LoginScreen() {
 
         <TouchableOpacity
           style={styles.linkButton}
-          onPress={() => router.replace('/RegisterScreen')}
+          onPress={() => navigation.navigate('Register')}
         >
           <Text style={styles.linkText}>
             Don't have an account? <Text style={styles.link}>Register</Text>

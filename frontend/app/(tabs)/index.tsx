@@ -97,10 +97,10 @@ const styles = StyleSheet.create({
     color: '#057C7C',
   },
   summaryContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: 'row', // Ensure cards are displayed in a row
     justifyContent: 'center',
     marginTop: 10,
+    flexWrap: 'wrap', // Allow wrapping if screen width is too small
   },
   summaryCard: {
     width: 150,
