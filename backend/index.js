@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import Connection from "./database/connection/db.js";
 import authRoute from "./routes/auth.js";
-import teamRoute from "./routes/team.js";
+// import teamRoute from "./routes/team.js";
 import projectRoute from "./routes/project.js";
 
 const PORT = 8000;
@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/auth", authRoute);
-app.use("/team", teamRoute);
+// app.use("/team", teamRoute);
 app.use("/project", projectRoute);
 
 app.listen(PORT, () => {

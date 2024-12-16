@@ -1,9 +1,9 @@
 import User from "../database/model/user.js"; 
 import bcrypt from "bcrypt"; 
 import env from "dotenv"; 
-import createSecretToken from '../utils/generateToken.js'
+import createSecretToken from '../utils/generateToken.js';
 
-env.config(); 
+env.config();
 
 const signin = async (req, res) => {
   const { email, password } = req.body;
@@ -17,7 +17,7 @@ const signin = async (req, res) => {
       return res.status(404).json({ message: "Invalid credentials" });
     }
 
-    const token = createSecretToken(user._id);
+    const token = createSecretToken(user.usn);
 
     // Uncomment if you want to send a cookie with the token
     // res.cookie("token", token, {

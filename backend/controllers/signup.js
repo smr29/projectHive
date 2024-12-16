@@ -25,19 +25,18 @@ const signup = async (req, res) => {
     });
     const user = await newUser.save();
 
-    const token = createSecretToken(user._id);
+    const token = createSecretToken(user.usn);
 
     res.cookie("token", token, {
       path: "/",
-      expires: new Date(Date.now() + 86400000),
-      secure: true, 
-      httpOnly: true, 
-      sameSite: "None", 
+      expires: new Date(Date.now() + 86400000), 
+      httpOnly: true,
+      sameSite: "None",
     });
 
     console.log("Cookie set successfully");
 
-    res.json(user);
+    res.json({ message: "User registered successfully", user });
   } catch (error) {
     console.error("Got an error", error);
     res.status(500).send("Internal Server Error");
