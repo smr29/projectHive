@@ -1,51 +1,47 @@
-const User = require("../database/model/user");
-
-const { createSecretToken } = require("../utils/generateToken");
-const bcrypt = require("bcrypt");
+import User from "../database/model/user.js"; 
+import bcrypt from "bcrypt"; 
+import createSecretToken from "../utils/generateToken.js"; 
 
 const signup = async (req, res) => {
   try {
-    if (
-      !(
-        req.body.email &&
-        req.body.password &&
-        req.body.name &&
-        req.body.usn
-      )
-    ) {
-      res.status(400).send("All input is required");
+    const { email, password, name, usn } = req.body;
+    if (!(email && password && name && usn)) {
+      return res.status(400).send("All input is required");
     }
 
-    const oldUser = await User.findOne({ email: req.body.email });
-
+    const oldUser = await User.findOne({ email });
     if (oldUser) {
       return res.status(409).send("User Already Exist. Please Login");
     }
-    const salt = 10;
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
-    const newUser = new User({
-      name: req.body.name,
 
-      usn: req.body.usn,
-      email: req.body.email,
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const newUser = new User({
+      name,
+      usn,
+      email,
       password: hashedPassword,
     });
     const user = await newUser.save();
+
     const token = createSecretToken(user._id);
 
     res.cookie("token", token, {
-      path: "/", 
-      expires: new Date(Date.now() + 86400000), 
+      path: "/",
+      expires: new Date(Date.now() + 86400000),
       secure: true, 
       httpOnly: true, 
-      sameSite: "None",
+      sameSite: "None", 
     });
 
-    console.log("cookie set succesfully");
+    console.log("Cookie set successfully");
 
     res.json(user);
   } catch (error) {
-    console.log("Gott an error", error);
+    console.error("Got an error", error);
+    res.status(500).send("Internal Server Error");
   }
 };
-module.exports = signup;
+
+export default signup;

@@ -1,7 +1,7 @@
-const Team = require("../database/model/team");
-const { nanoid } = require("nanoid");
+import Team from "../database/model/team.js"; 
+import { nanoid } from "nanoid";
 
-const createTeam = async (req, res) => {
+export const createTeam = async (req, res) => {
   const { name, userId } = req.body;
   if (!name || !userId) return res.status(400).json({ message: "All fields are required." });
 
@@ -17,7 +17,7 @@ const createTeam = async (req, res) => {
 };
 
 
-const joinTeam = async (req, res) => {
+export const joinTeam = async (req, res) => {
     const { userId, code } = req.body;
     if (!userId || !code) return res.status(400).json({ message: "All fields are required." });
   

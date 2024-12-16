@@ -1,11 +1,11 @@
-const express = require("express");
-const {
+import express from "express"; 
+import {
   addProject,
   editProject,
   viewUserProjects,
   viewAllProjects,
   filterProjects,
-} = require("../controllers/projectController");
+} from "../controllers/projectController.js"
 
 const router = express.Router();
 
@@ -15,4 +15,4 @@ router.get("/user/:userId", viewUserProjects);
 router.get("/all", viewAllProjects);
 router.get("/filter", filterProjects);
 
-module.exports = router;
+export default router;

@@ -1,8 +1,7 @@
-const express = require("express");
-
-const login = require("../controllers/signin");
-const signup = require("../controllers/signup");
-const signin = require("../controllers/signin");
+import express from "express"; // Correct default import for express
+import logout from "../controllers/signin.js"; // Add `.js` extensions for ES modules
+import signup from "../controllers/signup.js";
+import signin from "../controllers/signin.js";
 
 const router = express.Router();
 
@@ -12,4 +11,5 @@ router.get("/logout", (req, res) => {
   res.clearCookie("token");
   res.json({ message: "Logged out" });
 });
-module.exports = router;
+
+export default router;

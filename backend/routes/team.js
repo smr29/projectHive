@@ -1,9 +1,9 @@
-const express = require("express");
-const { createTeam, joinTeam } = require("../controllers/teamController");
+import express from "express";
+import { createTeam, joinTeam } from "../controllers/teamController.js";
 
 const router = express.Router();
 
 router.post("/create", createTeam);
 router.post("/join", joinTeam);
 
-module.exports = router;
+export default router;

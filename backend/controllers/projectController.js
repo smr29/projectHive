@@ -1,7 +1,8 @@
-const Project = require("../database/model/project");
-const Team = require("../database/model/team");
+import Project from "../database/model/project.js"; 
+import Team from "../database/model/team.js";   
 
-const addProject = async (req, res) => {
+
+export const addProject = async (req, res) => {
   const { title, description, subject, userId, teamId } = req.body;
   if (!title || !description || !subject || !userId || !teamId) {
     return res.status(400).json({ message: "All fields are required." });
@@ -22,7 +23,7 @@ const addProject = async (req, res) => {
 };
 
 
-const editProject = async (req, res) => {
+export const editProject = async (req, res) => {
     const { projectId, title, description, subject } = req.body;
   
     try {
@@ -38,7 +39,7 @@ const editProject = async (req, res) => {
   };
 
   
-const viewUserProjects = async (req, res) => {
+export const viewUserProjects = async (req, res) => {
     const { userId } = req.params;
 
     try {
@@ -50,7 +51,7 @@ const viewUserProjects = async (req, res) => {
 };
 
 
-const viewAllProjects = async (req, res) => {
+export const viewAllProjects = async (req, res) => {
     try {
       const projects = await Project.find().populate("createdBy team");
       res.status(200).json(projects);
@@ -60,7 +61,7 @@ const viewAllProjects = async (req, res) => {
   };
 
   
-const filterProjects = async (req, res) => {
+export const filterProjects = async (req, res) => {
     const { subject, usn } = req.query;
 
     try {

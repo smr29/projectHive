@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const env = require("dotenv");
+import { mongoose } from "mongoose";
+import env from "dotenv";
 
 env.config();
 const dbconnection = async () => {
@@ -8,4 +8,5 @@ const dbconnection = async () => {
     .then(() => console.log("Database connected"))
     .catch((err) => console.error(err));
 };
-module.exports = dbconnection;
+
+export default dbconnection;

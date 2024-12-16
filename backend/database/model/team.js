@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import { mongoose } from "mongoose"
 
 const teamSchema = mongoose.Schema({
   name: String,
@@ -8,4 +8,5 @@ const teamSchema = mongoose.Schema({
 });
 
 const Team = mongoose.model("team", teamSchema);
-module.exports = Team;
+
+export default Team

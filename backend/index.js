@@ -1,16 +1,15 @@
-const express = require("express");
-const app = express();
-
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
-const Connection = require("./database/connection/db");
+import express from "express";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import Connection from "./database/connection/db.js";
+import authRoute from "./routes/auth.js";
+import teamRoute from "./routes/team.js";
+import projectRoute from "./routes/project.js";
 
 const PORT = 8000;
 
-const authRoute = require("./routes/auth");
-const teamRoute = require("./routes/team");
-const projectRoute = require("./routes/project");
+const app = express();
 
 Connection();
 
@@ -30,11 +29,6 @@ app.use("/auth", authRoute);
 app.use("/team", teamRoute);
 app.use("/project", projectRoute);
 
-
 app.listen(PORT, () => {
   console.log(`Server is running on PORT ${PORT}`);
 });
-
-
-
-
