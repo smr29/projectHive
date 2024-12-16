@@ -3,9 +3,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './index';
 import { View, Text } from 'react-native';
 import ProjectStatus from './Status';
-import RegisterTeam from './RegisterTeam';
+import AddProject from './AddProject';
 import Projects from './MyProjects';
 import LoginScreen from './LoginScreen';
+import RegisterScreen from './RegisterScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -36,9 +37,9 @@ export default function TabsLayout() {
         options={{ title: 'Status' }}
       />
       <Tab.Screen 
-        name="RegisterTeam" 
-        component={RegisterTeam} 
-        options={{ title: 'Register Team' }}
+        name="AddProject" 
+        component={AddProject} 
+        options={{ title: 'Add Project' }}
       />
       <Tab.Screen 
         name="MyProjects" 
