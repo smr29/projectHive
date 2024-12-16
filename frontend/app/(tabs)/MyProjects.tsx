@@ -6,7 +6,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootTabParamList } from '@/navigation/types';
 
 type Props = {
-  navigation: NativeStackNavigationProp<RootTabParamList, 'ProjectStatus'>;
+  navigation: NativeStackNavigationProp<RootTabParamList, 'MyProjects'>;
 };
 
 type Project = {
@@ -32,19 +32,19 @@ export default function ProjectStatusScreen({ navigation }: Props) {
     },
   ]);
 
-  const handleUploadDocument = async (projectId: string) => {
-    const result = await DocumentPicker.getDocumentAsync();
-    if (result.type === 'success') {
-      setProjects((prevProjects) =>
-        prevProjects.map((project) =>
-          project.id === projectId
-            ? { ...project, documents: [...project.documents, { name: result.name, uri: result.uri }] }
-            : project
-        )
-      );
-      Alert.alert('Success', 'Document uploaded successfully.');
-    }
-  };
+  // const handleUploadDocument = async (projectId: string) => {
+  //   const result = await DocumentPicker.getDocumentAsync();
+  //   if (result.type === 'success') {
+  //     setProjects((prevProjects) =>
+  //       prevProjects.map((project) =>
+  //         project.id === projectId
+  //           ? { ...project, documents: [...project.documents, { name: result.name, uri: result.uri }] }
+  //           : project
+  //       )
+  //     );
+  //     Alert.alert('Success', 'Document uploaded successfully.');
+  //   }
+  // };
 
   const renderProjectItem = ({ item }: { item: Project }) => (
     <Card style={styles.projectCard}>
@@ -64,7 +64,7 @@ export default function ProjectStatusScreen({ navigation }: Props) {
       <View style={styles.cardActions}>
         <TouchableOpacity
           style={styles.uploadButton}
-          onPress={() => handleUploadDocument(item.id)}
+          // onPress={() => handleUploadDocument(item.id)}
         >
           <Text style={styles.buttonText}>Upload Document</Text>
         </TouchableOpacity>
@@ -87,8 +87,8 @@ export default function ProjectStatusScreen({ navigation }: Props) {
   return (
     <SafeAreaView style={styles.container}>
       <Appbar.Header style={styles.header}>
-        <Appbar.Action icon="menu" onPress={() => {}} />
-        <Appbar.Content title="Project Status" titleStyle={styles.headerTitle} />
+        {/* <Appbar.Action icon="menu" onPress={() => {}} /> */}
+        <Appbar.Content title="My Projects" titleStyle={styles.headerTitle} />
       </Appbar.Header>
 
       <FlatList

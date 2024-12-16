@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootTabParamList } from '@/navigation/types';
+import { Appbar } from 'react-native-paper';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootTabParamList, 'JoinTeam'>;
@@ -18,56 +19,55 @@ type Props = {
 export default function JoinTeamScreen({ navigation }: Props) {
   const [formData, setFormData] = useState({
     teamCode: '',
-    usn: '',
   });
 
   const handleJoinTeam = () => {
-    const { teamCode, usn } = formData;
+    const { teamCode } = formData;
 
-    if (!teamCode || !usn) {
+    if (!teamCode) {
       Alert.alert('Error', 'Both Team Code and USN are required.');
       return;
     }
 
     // Mock logic to check if the team code and USN are valid
     const isValidTeamCode = teamCode.length === 6; // Example validation
-    const isValidUSN = usn.length === 10; // Example validation
+    // const isValidUSN = usn.length === 10; // Example validation
 
     if (!isValidTeamCode) {
       Alert.alert('Error', 'Invalid Team Code.');
       return;
     }
 
-    if (!isValidUSN) {
-      Alert.alert('Error', 'Invalid USN.');
-      return;
-    }
+    // if (!isValidUSN) {
+    //   Alert.alert('Error', 'Invalid USN.');
+    //   return;
+    // }
 
     // If valid, proceed to join the team
     Alert.alert('Success', `Successfully joined the team with code: ${teamCode}`);
-    navigation.navigate('Home');
+    // navigation.navigate('Home');
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Join a Team</Text>
-        <Text style={styles.subtitle}>Enter the Team Code and your USN</Text>
-      </View>
+      <Appbar.Header style={styles.header}>
+        {/* <Appbar.Action icon="menu" onPress={() => {}} /> */}
+        <Appbar.Content title="Join Project" titleStyle={styles.headerTitle} />
+      </Appbar.Header>
 
       <View style={styles.form}>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Team Code</Text>
+          <Text style={styles.label}>Project Code</Text>
           <TextInput
             style={styles.input}
             value={formData.teamCode}
             onChangeText={(text) => setFormData({ ...formData, teamCode: text })}
-            placeholder="Enter team code"
+            placeholder="Enter project code"
             placeholderTextColor="#9CA3AF"
           />
         </View>
 
-        <View style={styles.inputContainer}>
+        {/* <View style={styles.inputContainer}>
           <Text style={styles.label}>USN</Text>
           <TextInput
             style={styles.input}
@@ -76,7 +76,7 @@ export default function JoinTeamScreen({ navigation }: Props) {
             placeholder="Enter your USN"
             placeholderTextColor="#9CA3AF"
           />
-        </View>
+        </View> */}
 
         <TouchableOpacity style={styles.button} onPress={handleJoinTeam}>
           <Text style={styles.buttonText}>Join Team</Text>
@@ -88,11 +88,12 @@ export default function JoinTeamScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFFFFF' },
+  headerTitle: { color: 'white', fontSize: 20 },
   header: {
     backgroundColor: '#057C7C',
-    padding: 24,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    
+    // borderBottomLeftRadius: 20,
+    // borderBottomRightRadius: 20,
   },
   title: { color: '#FFFFFF', fontSize: 28, fontWeight: 'bold', textAlign: 'center' },
   subtitle: { color: '#E0F2F1', fontSize: 16, textAlign: 'center' },

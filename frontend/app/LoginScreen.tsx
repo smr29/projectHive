@@ -1,31 +1,44 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RootTabParamList } from '@/navigation/types';
+import type { RootStackParamList } from '../navigation/types';
 import { useRouter } from 'expo-router';
-
 // type Props = {
-//   navigation: NativeStackNavigationProp<RootTabParamList, 'Register'>;
+//   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
 // };
 
-export default function RegisterScreen() {
+export default function LoginScreen() {
   const router = useRouter()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = () => {
-    // Handle login logic here
-    // navigation.navigate('Home');
-    console.log('hi')
+  const handleLogin = () => {
+    const { email, password } = formData;
+
+    // Basic validation
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in both fields.');
+      return;
+    }
+
+    // Perform login logic here
+    setIsLoading(true);
+    // Simulate a login API call
+    setTimeout(() => {
+      setIsLoading(false);
+      Alert.alert('Success', 'Logged in successfully!');
+      router.push('/(tabs)/AddProject') // Navigate to the Home screen after successful login
+    }, 2000);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Welcome</Text>
-        <Text style={styles.subtitle}>Register to use ProjectHive</Text>
+        <Text style={styles.title}>Welcome Back</Text>
+        <Text style={styles.subtitle}>Login to continue</Text>
       </View>
 
       <View style={styles.form}>
@@ -38,6 +51,7 @@ export default function RegisterScreen() {
             placeholder="Enter your email"
             keyboardType="email-address"
             autoCapitalize="none"
+            accessibilityLabel="Email input field"
           />
         </View>
 
@@ -49,21 +63,28 @@ export default function RegisterScreen() {
             onChangeText={(text) => setFormData({ ...formData, password: text })}
             placeholder="Enter your password"
             secureTextEntry
+            accessibilityLabel="Password input field"
           />
         </View>
       </View>
 
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Register</Text>
+        <TouchableOpacity
+          style={[styles.button, isLoading && styles.loadingButton]}
+          onPress={handleLogin}
+          disabled={isLoading} // Disable button while loading
+        >
+          <Text style={styles.buttonText}>
+            {isLoading ? 'Loading...' : 'Login'}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.linkButton}
-          onPress={() => router.replace('/LoginScreen')}
+          onPress={() => router.push('/RegisterScreen')}
         >
           <Text style={styles.linkText}>
-            Have an account? <Text style={styles.link}>Login</Text>
+            Don't have an account? <Text style={styles.link}>Register</Text>
           </Text>
         </TouchableOpacity>
       </View>
@@ -74,20 +95,22 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#fff',
   },
   header: {
     padding: 24,
+    backgroundColor: '#057C7C',
+    alignItems: 'center',
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#1F2937',
+    color: '#fff',
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#6B7280',
+    color: '#E0F2F1',
   },
   form: {
     padding: 24,
@@ -113,14 +136,17 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
   },
   button: {
-    backgroundColor: '#7C3AED',
+    backgroundColor: '#057C7C',
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
     marginBottom: 16,
   },
+  loadingButton: {
+    backgroundColor: '#A0D8D0', // Light teal when loading
+  },
   buttonText: {
-    color: '#FFFFFF',
+    color: '#fff',
     fontSize: 16,
     fontWeight: '600',
   },
@@ -132,7 +158,7 @@ const styles = StyleSheet.create({
     color: '#6B7280',
   },
   link: {
-    color: '#7C3AED',
+    color: '#057C7C',
     fontWeight: '500',
   },
 });

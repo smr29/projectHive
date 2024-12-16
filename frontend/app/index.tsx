@@ -3,15 +3,17 @@ import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { Appbar, Card, Title, Paragraph, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RootStackParamList } from '../../navigation/types';
+import type { RootStackParamList } from '../navigation/types';
+import { useRouter } from 'expo-router';
 
 const App = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  // const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const router = useRouter()
 
   return (
     <View style={styles.container}>
       {/* Header Section */}
-      <Appbar.Header style={styles.header}>
+      {/* <Appbar.Header style={styles.header}>
         <Appbar.Action
           icon={() => (
             <Image
@@ -24,33 +26,12 @@ const App = () => {
           style={styles.logoAction}
         />
         <Appbar.Content title="Project Hive" titleStyle={styles.headerTitle} />
-      </Appbar.Header>
+      </Appbar.Header> */}
 
       {/* Welcome Section */}
       <View style={styles.greetingSection}>
         <Text style={styles.greetingText}>Welcome to Project Hive</Text>
         <Text style={styles.subText}>Manage your projects seamlessly</Text>
-      </View>
-
-      {/* Login/Register Section */}
-      <View style={styles.authSection}>
-        <Text style={styles.authPrompt}>Get Started</Text>
-        <Button
-          mode="contained"
-          style={styles.button}
-          labelStyle={styles.buttonText}
-          onPress={() => navigation.navigate('Login')}
-        >
-          Login
-        </Button>
-        <Button
-          mode="outlined"
-          style={styles.outlinedButton}
-          labelStyle={styles.outlinedButtonText}
-          onPress={() => navigation.navigate('RegisterScreen')}
-        >
-          Register
-        </Button>
       </View>
 
       {/* Cards Section (Home Screen) */}
@@ -71,6 +52,27 @@ const App = () => {
           </Card>
         </View>
       </ScrollView>
+
+      {/* Login/Register Section */}
+      <View style={styles.authSection}>
+        <Text style={styles.authPrompt}>Get Started</Text>
+        <Button
+          mode="contained"
+          style={styles.button}
+          labelStyle={styles.buttonText}
+          onPress={() => router.push('/LoginScreen')}
+        >
+          Login
+        </Button>
+        <Button
+          mode="outlined"
+          style={styles.outlinedButton}
+          labelStyle={styles.outlinedButtonText}
+          onPress={() => router.push('/RegisterScreen')}
+        >
+          Register
+        </Button>
+      </View>
     </View>
   );
 };

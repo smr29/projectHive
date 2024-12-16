@@ -1,3 +1,4 @@
+import { Project } from '@/navigation/types';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Modal } from 'react-native';
 import { Appbar, Card, IconButton } from 'react-native-paper';
@@ -8,32 +9,36 @@ const MyProjectsScreen = () => {
 
   const projects = [
     {
+      id: '1',
       title: 'Tax Tracker App',
       description: 'A simplified solution to track and manage tax payments.',
       status: 'Ongoing',
-      details: 'This project involves building a web app for tracking tax payments in a simplified manner.',
+      subject: 'This project involves building a web app for tracking tax payments in a simplified manner.',
     },
     {
+      id: '2',
       title: 'Project Hive',
       description: 'A project management tool for team collaboration.',
       status: 'Completed',
-      details: 'This is a tool for managing projects, with features such as task tracking and team communication.',
+      subject: 'This is a tool for managing projects, with features such as task tracking and team communication.',
     },
     {
+      id: '3',
       title: 'ByteXync Event Portal',
       description: 'An event management system for tech club events.',
       status: 'Ongoing',
-      details: 'A platform for organizing tech club events, managing registrations, and promoting activities.',
+      subject: 'A platform for organizing tech club events, managing registrations, and promoting activities.',
     },
     {
+      id: '4',
       title: 'Portfolio Website',
       description: 'A personal portfolio to showcase projects and skills.',
       status: 'Pending',
-      details: 'A personal website to display your work, including projects, blogs, and contact information.',
+      subject: 'A personal website to display your work, including projects, blogs, and contact information.',
     },
   ];
 
-  const openModal = (project) => {
+  const openModal = (project:any) => {
     setSelectedProject(project);
     setIsModalVisible(true);
   };
@@ -47,8 +52,8 @@ const MyProjectsScreen = () => {
     <View style={styles.container}>
       {/* Header */}
       <Appbar.Header style={styles.header}>
-        <Appbar.Action icon="menu" onPress={() => {}} />
-        <Appbar.Content title="My Projects" titleStyle={styles.headerTitle} />
+        {/* <Appbar.Action icon="menu" onPress={() => {}} /> */}
+        <Appbar.Content title="View Projects" titleStyle={styles.headerTitle} />
       </Appbar.Header>
 
       {/* Projects List */}
@@ -79,7 +84,7 @@ const MyProjectsScreen = () => {
                   size={24}
                   onPress={() => openModal(project)}
                   style={styles.viewButton}
-                  color="#057C7C"
+                  // color="#057C7C"j
                 />
               </View>
             </View>
@@ -91,14 +96,14 @@ const MyProjectsScreen = () => {
       {selectedProject && (
         <Modal visible={isModalVisible} animationType="slide" onRequestClose={closeModal}>
           <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>{selectedProject.title}</Text>
-            <Text style={styles.modalDescription}>{selectedProject.details}</Text>
+            <Text style={styles.modalTitle}>{selectedProject}</Text>
+            <Text style={styles.modalDescription}>{selectedProject}</Text>
             <IconButton
               icon="close"
               size={24}
               onPress={closeModal}
               style={styles.closeModalButton}
-              color="#057C7C"
+              // color="#057C7C"
             />
           </View>
         </Modal>

@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RootStackParamList } from '../../navigation/types';
+import type { RootStackParamList } from '../navigation/types';
+import { useRouter } from 'expo-router';
+// type Props = {
+//   navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>;
+// };
 
-type Props = {
-  navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
-};
-
-export default function LoginScreen({ navigation }: Props) {
+export default function RegisterScreen() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
+    name: '',
+    usn: '',
     email: '',
     password: '',
   });
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = () => {
-    const { email, password } = formData;
+    const { name, usn, email, password } = formData;
 
     // Basic validation
-    if (!email || !password) {
+    if (!email || !password || !name || !usn) {
       Alert.alert('Error', 'Please fill in both fields.');
       return;
     }
@@ -29,18 +32,40 @@ export default function LoginScreen({ navigation }: Props) {
     setTimeout(() => {
       setIsLoading(false);
       Alert.alert('Success', 'Logged in successfully!');
-      navigation.navigate('Home'); // Navigate to the Home screen after successful login
+      router.push('/LoginScreen') // Navigate to the Home screen after successful login
     }, 2000);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.subtitle}>Login to continue</Text>
+        <Text style={styles.title}>Welcome</Text>
+        <Text style={styles.subtitle}>Register to continue</Text>
       </View>
 
       <View style={styles.form}>
+      <View style={styles.inputContainer}>
+          <Text style={styles.label}>Name</Text>
+          <TextInput
+            style={styles.input}
+            value={formData.name}
+            onChangeText={(text) => setFormData({ ...formData, name: text })}
+            placeholder="Enter your name"
+            secureTextEntry
+            accessibilityLabel="Name input field"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>USN</Text>
+          <TextInput
+            style={styles.input}
+            value={formData.usn}
+            onChangeText={(text) => setFormData({ ...formData, usn: text })}
+            placeholder="Enter your USN - 1DS22CS***"
+            secureTextEntry
+            accessibilityLabel="Usn input field"
+          />
+        </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Email</Text>
           <TextInput
@@ -74,16 +99,16 @@ export default function LoginScreen({ navigation }: Props) {
           disabled={isLoading} // Disable button while loading
         >
           <Text style={styles.buttonText}>
-            {isLoading ? 'Loading...' : 'Login'}
+            {isLoading ? 'Loading...' : 'Register'}
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.linkButton}
-          onPress={() => navigation.navigate('RegisterScreen')}
+          onPress={() => router.replace('/LoginScreen')}
         >
           <Text style={styles.linkText}>
-            Don't have an account? <Text style={styles.link}>Register</Text>
+            Have an account? <Text style={styles.link}>Login</Text>
           </Text>
         </TouchableOpacity>
       </View>

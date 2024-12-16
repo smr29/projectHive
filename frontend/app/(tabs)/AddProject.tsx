@@ -12,105 +12,65 @@ import {
 } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootTabParamList } from '@/navigation/types';
+import { Appbar } from 'react-native-paper';
 
 type Props = {
-  navigation: NativeStackNavigationProp<RootTabParamList, 'Register'>;
+  navigation: NativeStackNavigationProp<RootTabParamList, 'RegisterTeam'>;
 };
 
 export default function RegisterTeamScreen({ navigation }: Props) {
   const [formData, setFormData] = useState({
-    course: '',
-    projectName: '',
-    projectDescription: '',
+    subject: '',
+    name: '',
+    description: '',
     teamSize: '',
     status: '',
-    members: [{ name: '', usn: '' }],
   });
 
   const [allUSNs, setAllUSNs] = useState<string[]>([]);
-  const [teamCode, setTeamCode] = useState<string>('');  // Store the generated code
+  // const [teamCode, setTeamCode] = useState<string>('');  // Store the generated code
 
-  const generateTeamCode = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let code = '';
-    for (let i = 0; i < 6; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return code;
-  };
-
-  const handleAddMember = () => {
-    if (formData.members.length < Number(formData.teamSize)) {
-      setFormData({
-        ...formData,
-        members: [...formData.members, { name: '', usn: '' }],
-      });
-    } else {
-      Alert.alert('Error', `Team size cannot exceed ${formData.teamSize}`);
-    }
-  };
+  // const generateTeamCode = () => {
+  //   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  //   let code = '';
+  //   for (let i = 0; i < 6; i++) {
+  //     code += chars.charAt(Math.floor(Math.random() * chars.length));
+  //   }
+  //   return code;
+  // };
 
   const handleRegister = () => {
-    const { course, projectName, projectDescription, teamSize, status, members } = formData;
+    const { subject, name, description, teamSize, status } = formData;
 
-    if (!course || !projectName || !projectDescription || !teamSize || !status || members.some(member => !member.name || !member.usn)) {
+    if (!subject || !name || !description || !teamSize || !status ) {
       Alert.alert('Error', 'All fields are required.');
       return;
     }
-
-    const memberUSNs = members.map(member => member.usn);
-    const duplicateUSNs = memberUSNs.filter((usn, index) => memberUSNs.indexOf(usn) !== index);
-    if (duplicateUSNs.length > 0) {
-      Alert.alert('Error', 'Duplicate USNs found within the team.');
-      return;
-    }
-
-    const duplicateInCourse = members.some(member => allUSNs.includes(member.usn));
-    if (duplicateInCourse) {
-      Alert.alert('Error', 'One or more members are already part of another team in this course.');
-      return;
-    }
-
-    // Generate team code and set it in the state
-    const generatedCode = generateTeamCode();
-    setTeamCode(generatedCode);
-
-    // Add the new USNs to the list of USNs in the course
-    setAllUSNs([...allUSNs, ...memberUSNs]);
-
     // Display success alert with the team code
-    Alert.alert('Success', `Team registered successfully for course "${course}" with code: ${generatedCode}`);
+    Alert.alert('Success', `Team registered successfully for course "${subject}"`);
     console.log(formData);
-    navigation.navigate('Home');
-  };
-
-  const updateMember = (index: number, key: 'name' | 'usn', value: string) => {
-    const updatedMembers = formData.members.map((member, i) =>
-      i === index ? { ...member, [key]: value } : member
-    );
-    setFormData({ ...formData, members: updatedMembers });
-  };
-
-  const handleGenerateCode = () => {
-    const generatedCode = generateTeamCode();
-    setTeamCode(generatedCode);
+    navigation.navigate('JoinTeam');
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.header}>
+        {/* <View style={styles.header}>
           <Text style={styles.title}>Add Team</Text>
           <Text style={styles.subtitle}>Fill in the details to register your team</Text>
-        </View>
+        </View> */}
+        <Appbar.Header style={styles.header}>
+        {/* <Appbar.Action icon="menu" onPress={() => {}} /> */}
+        <Appbar.Content title="Add Project" titleStyle={styles.headerTitle} />
+      </Appbar.Header>
 
         <View style={styles.form}>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Course</Text>
             <View style={styles.pickerWrapper}>
               <Picker
-                selectedValue={formData.course}
-                onValueChange={(value) => setFormData({ ...formData, course: value })}
+                selectedValue={formData.subject}
+                onValueChange={(value) => setFormData({ ...formData, subject: value })}
                 style={styles.picker}
               >
                 <Picker.Item label="Select a course" value="" />
@@ -126,8 +86,8 @@ export default function RegisterTeamScreen({ navigation }: Props) {
             <Text style={styles.label}>Project Name</Text>
             <TextInput
               style={styles.input}
-              value={formData.projectName}
-              onChangeText={(text) => setFormData({ ...formData, projectName: text })}
+              value={formData.name}
+              onChangeText={(text) => setFormData({ ...formData, name: text })}
               placeholder="Enter project name"
               placeholderTextColor="#9CA3AF"
             />
@@ -137,8 +97,8 @@ export default function RegisterTeamScreen({ navigation }: Props) {
             <Text style={styles.label}>Project Description</Text>
             <TextInput
               style={styles.input}
-              value={formData.projectDescription}
-              onChangeText={(text) => setFormData({ ...formData, projectDescription: text })}
+              value={formData.description}
+              onChangeText={(text) => setFormData({ ...formData, description: text })}
               placeholder="Enter project description"
               placeholderTextColor="#9CA3AF"
             />
@@ -149,7 +109,7 @@ export default function RegisterTeamScreen({ navigation }: Props) {
             <View style={styles.pickerWrapper}>
               <Picker
                 selectedValue={formData.teamSize}
-                onValueChange={(value) => setFormData({ ...formData, teamSize: value, members: [{ name: '', usn: '' }] })}
+                onValueChange={(value) => setFormData({ ...formData, teamSize: value})}
                 style={styles.picker}
               >
                 <Picker.Item label="Select team size" value="" />
@@ -160,47 +120,27 @@ export default function RegisterTeamScreen({ navigation }: Props) {
             </View>
           </View>
 
-          {formData.members.map((member, index) => (
-            <View key={index} style={styles.memberContainer}>
-              <Text style={styles.memberLabel}>Member {index + 1}</Text>
-              <TextInput
-                style={styles.input}
-                value={member.name}
-                onChangeText={(text) => updateMember(index, 'name', text)}
-                placeholder="Enter member name"
-                placeholderTextColor="#9CA3AF"
-              />
-              <TextInput
-                style={styles.input}
-                value={member.usn}
-                onChangeText={(text) => updateMember(index, 'usn', text)}
-                placeholder="Enter USN"
-                placeholderTextColor="#9CA3AF"
-              />
-            </View>
-          ))}
-
-          {/* Add member button */}
-          <TouchableOpacity style={styles.addMemberButton} onPress={handleAddMember}>
-            <Text style={styles.buttonText}>Add Member</Text>
-          </TouchableOpacity>
-
-          {/* Register button */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Project Status - started, ongoing or finished</Text>
+            <TextInput
+              style={styles.input}
+              value={formData.status}
+              onChangeText={(text) => setFormData({ ...formData, status: text })}
+              placeholder="Enter project description"
+              placeholderTextColor="#9CA3AF"
+            />
+          </View>
+          
           <TouchableOpacity style={styles.button} onPress={handleRegister}>
-            <Text style={styles.buttonText}>Register</Text>
-          </TouchableOpacity>
-
-          {/* Generate code button */}
-          <TouchableOpacity style={styles.button} onPress={handleGenerateCode}>
-            <Text style={styles.buttonText}>Generate Code</Text>
+            <Text style={styles.buttonText}>Register & Generate Code</Text>
           </TouchableOpacity>
 
           {/* Display generated team code */}
-          {teamCode && (
+          {/* {teamCode && (
             <View style={styles.teamCodeContainer}>
               <Text style={styles.teamCodeText}>Your Team Code: {teamCode}</Text>
             </View>
-          )}
+          )} */}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -209,8 +149,15 @@ export default function RegisterTeamScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFFFFF' },
-  scrollContainer: { flexGrow: 1, paddingBottom: 20, paddingTop: 10 },
-  header: { backgroundColor: '#057C7C', padding: 24, borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
+  scrollContainer: { flexGrow: 1, paddingBottom: 20 },
+  header: {
+    backgroundColor: '#057C7C',
+    elevation: 4,
+  },
+  headerTitle: {
+    color: 'white',
+    fontSize: 20,
+  },
   title: { color: '#FFFFFF', fontSize: 28, fontWeight: 'bold', textAlign: 'center' },
   subtitle: { color: '#E0F2F1', fontSize: 16, textAlign: 'center', marginBottom: 20 },
   form: { padding: 20 },
