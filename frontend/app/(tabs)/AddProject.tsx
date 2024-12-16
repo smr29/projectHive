@@ -21,9 +21,23 @@ export default function RegisterTeamScreen({ navigation }: Props) {
   const [formData, setFormData] = useState({
     course: '',
     projectName: '',
+    projectDescription: '',
     teamSize: '',
+    status: '',
     members: [{ name: '', usn: '' }],
   });
+
+  const [allUSNs, setAllUSNs] = useState<string[]>([]);
+  const [teamCode, setTeamCode] = useState<string>('');  // Store the generated code
+
+  const generateTeamCode = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return code;
+  };
 
   const handleAddMember = () => {
     if (formData.members.length < Number(formData.teamSize)) {
@@ -37,12 +51,35 @@ export default function RegisterTeamScreen({ navigation }: Props) {
   };
 
   const handleRegister = () => {
-    const { course, projectName, teamSize, members } = formData;
-    if (!course || !projectName || !teamSize || members.some(member => !member.name || !member.usn)) {
+    const { course, projectName, projectDescription, teamSize, status, members } = formData;
+
+    if (!course || !projectName || !projectDescription || !teamSize || !status || members.some(member => !member.name || !member.usn)) {
       Alert.alert('Error', 'All fields are required.');
       return;
     }
-    Alert.alert('Success', `Team registered successfully for course "${course}"`);
+
+    const memberUSNs = members.map(member => member.usn);
+    const duplicateUSNs = memberUSNs.filter((usn, index) => memberUSNs.indexOf(usn) !== index);
+    if (duplicateUSNs.length > 0) {
+      Alert.alert('Error', 'Duplicate USNs found within the team.');
+      return;
+    }
+
+    const duplicateInCourse = members.some(member => allUSNs.includes(member.usn));
+    if (duplicateInCourse) {
+      Alert.alert('Error', 'One or more members are already part of another team in this course.');
+      return;
+    }
+
+    // Generate team code and set it in the state
+    const generatedCode = generateTeamCode();
+    setTeamCode(generatedCode);
+
+    // Add the new USNs to the list of USNs in the course
+    setAllUSNs([...allUSNs, ...memberUSNs]);
+
+    // Display success alert with the team code
+    Alert.alert('Success', `Team registered successfully for course "${course}" with code: ${generatedCode}`);
     console.log(formData);
     navigation.navigate('Home');
   };
@@ -54,16 +91,19 @@ export default function RegisterTeamScreen({ navigation }: Props) {
     setFormData({ ...formData, members: updatedMembers });
   };
 
+  const handleGenerateCode = () => {
+    const generatedCode = generateTeamCode();
+    setTeamCode(generatedCode);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Register Team</Text>
+          <Text style={styles.title}>Add Team</Text>
           <Text style={styles.subtitle}>Fill in the details to register your team</Text>
         </View>
 
-        {/* Form */}
         <View style={styles.form}>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Course</Text>
@@ -94,13 +134,22 @@ export default function RegisterTeamScreen({ navigation }: Props) {
           </View>
 
           <View style={styles.inputContainer}>
+            <Text style={styles.label}>Project Description</Text>
+            <TextInput
+              style={styles.input}
+              value={formData.projectDescription}
+              onChangeText={(text) => setFormData({ ...formData, projectDescription: text })}
+              placeholder="Enter project description"
+              placeholderTextColor="#9CA3AF"
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
             <Text style={styles.label}>Team Size</Text>
             <View style={styles.pickerWrapper}>
               <Picker
                 selectedValue={formData.teamSize}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, teamSize: value, members: [{ name: '', usn: '' }] })
-                }
+                onValueChange={(value) => setFormData({ ...formData, teamSize: value, members: [{ name: '', usn: '' }] })}
                 style={styles.picker}
               >
                 <Picker.Item label="Select team size" value="" />
@@ -131,25 +180,27 @@ export default function RegisterTeamScreen({ navigation }: Props) {
             </View>
           ))}
 
-          {/* Add Member */}
-          {formData.teamSize && formData.members.length < Number(formData.teamSize) && (
-            <TouchableOpacity style={styles.addButton} onPress={handleAddMember}>
-              <Text style={styles.addButtonText}>+ Add Member</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+          {/* Add member button */}
+          <TouchableOpacity style={styles.addMemberButton} onPress={handleAddMember}>
+            <Text style={styles.buttonText}>Add Member</Text>
+          </TouchableOpacity>
 
-        {/* Buttons */}
-        <View style={styles.buttonContainer}>
+          {/* Register button */}
           <TouchableOpacity style={styles.button} onPress={handleRegister}>
             <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.linkButton}
-            onPress={() => navigation.navigate('Home')}
-          >
-            <Text style={styles.linkText}>Cancel</Text>
+
+          {/* Generate code button */}
+          <TouchableOpacity style={styles.button} onPress={handleGenerateCode}>
+            <Text style={styles.buttonText}>Generate Code</Text>
           </TouchableOpacity>
+
+          {/* Display generated team code */}
+          {teamCode && (
+            <View style={styles.teamCodeContainer}>
+              <Text style={styles.teamCodeText}>Your Team Code: {teamCode}</Text>
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -158,14 +209,14 @@ export default function RegisterTeamScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFFFFF' },
-  scrollContainer: { flexGrow: 1, paddingBottom: 20 },
+  scrollContainer: { flexGrow: 1, paddingBottom: 20, paddingTop: 10 },
   header: { backgroundColor: '#057C7C', padding: 24, borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
   title: { color: '#FFFFFF', fontSize: 28, fontWeight: 'bold', textAlign: 'center' },
-  subtitle: { color: '#E0F2F1', fontSize: 16, textAlign: 'center' },
+  subtitle: { color: '#E0F2F1', fontSize: 16, textAlign: 'center', marginBottom: 20 },
   form: { padding: 20 },
   inputContainer: { marginBottom: 16 },
   label: { color: '#374151', fontSize: 14, fontWeight: '600', marginBottom: 8 },
-  pickerWrapper: { borderWidth: 1, borderColor: '#9CA3AF', borderRadius: 10, backgroundColor: '#F1F5F9' },
+  pickerWrapper: { borderWidth: 1, borderColor: '#9CA3AF', borderRadius: 10, marginBottom: 16 },
   picker: { color: '#374151' },
   input: {
     borderWidth: 1,
@@ -173,16 +224,24 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
     fontSize: 16,
-    backgroundColor: '#F9FAFB',
+    color: '#374151',
+    marginBottom: 8, // Added margin for spacing
+  },
+  button: { backgroundColor: '#057C7C', padding: 10, borderRadius: 10, alignItems: 'center', marginBottom: 16 },
+  addMemberButton: { backgroundColor: '#057C7C', padding: 10, borderRadius: 10, alignItems: 'center', marginBottom: 16 },
+  buttonText: { color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' },
+  memberContainer: { marginBottom: 16 },
+  memberLabel: { fontSize: 16, fontWeight: '600', marginBottom: 8, color: '#057C7C' },
+  teamCodeContainer: {
+    marginTop: 16,
+    padding: 16,
+    backgroundColor: '#E0F2F1',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  teamCodeText: {
+    fontSize: 16,
+    fontWeight: 'bold',
     color: '#374151',
   },
-  memberContainer: { marginBottom: 16 },
-  memberLabel: { color: '#057C7C', fontSize: 16, fontWeight: '600', marginBottom: 8 },
-  addButton: { backgroundColor: '#057C7C', padding: 12, borderRadius: 8, alignItems: 'center' },
-  addButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' },
-  buttonContainer: { paddingHorizontal: 20 },
-  button: { backgroundColor: '#057C7C', padding: 14, borderRadius: 10, alignItems: 'center' },
-  buttonText: { color: '#FFFFFF', fontSize: 16, fontWeight: 'bold' },
-  linkButton: { marginTop: 10, alignItems: 'center' },
-  linkText: { color: '#6B7280', fontSize: 14 },
 });
