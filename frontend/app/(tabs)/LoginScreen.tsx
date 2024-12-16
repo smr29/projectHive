@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RootStackParamList } from '../navigation/types';
+import type { RootStackParamList } from '../../navigation/types';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -23,13 +23,14 @@ export default function LoginScreen({ navigation }: Props) {
       return;
     }
 
-    // Example of handling login (add your own logic)
+    // Perform login logic here
     setIsLoading(true);
+    // Simulate a login API call
     setTimeout(() => {
       setIsLoading(false);
-      // Navigate to Home screen after successful login
-      navigation.navigate('Home');
-    }, 1000);
+      Alert.alert('Success', 'Logged in successfully!');
+      navigation.navigate('Home'); // Navigate to the Home screen after successful login
+    }, 2000);
   };
 
   return (
@@ -73,13 +74,13 @@ export default function LoginScreen({ navigation }: Props) {
           disabled={isLoading} // Disable button while loading
         >
           <Text style={styles.buttonText}>
-            {isLoading ? 'Logging in...' : 'Login'}
+            {isLoading ? 'Loading...' : 'Login'}
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.linkButton}
-          onPress={() => navigation.navigate('Register')}
+          onPress={() => navigation.navigate('RegisterScreen')}
         >
           <Text style={styles.linkText}>
             Don't have an account? <Text style={styles.link}>Register</Text>

@@ -1,8 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { Appbar, Card, Title, Paragraph, Button } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/types';
 
 const App = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   return (
     <View style={styles.container}>
       {/* Header Section */}
@@ -34,7 +39,7 @@ const App = () => {
           mode="contained"
           style={styles.button}
           labelStyle={styles.buttonText}
-          onPress={() => console.log('Login')}
+          onPress={() => navigation.navigate('Login')}
         >
           Login
         </Button>
@@ -42,6 +47,7 @@ const App = () => {
           mode="outlined"
           style={styles.outlinedButton}
           labelStyle={styles.outlinedButtonText}
+          onPress={() => navigation.navigate('RegisterScreen')}
         >
           Register
         </Button>

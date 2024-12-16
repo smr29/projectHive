@@ -7,6 +7,7 @@ export type RootTabParamList = {
   Register: undefined;
   RegisterTeam: undefined;
   Welcome: undefined;
+  JoinTeam: undefined; 
 };
   
 export type Project = {
@@ -15,4 +16,18 @@ export type Project = {
   course: string;
   teamSize: number;
   members: { name: string; usn: string }[];
+};
+
+export type RootStackParamList = {
+  Home: undefined;
+  Login: undefined;
+  RegisterScreen: undefined;
+  // Add other screens here
+};
+
+export type RootDrawerParamList = {
+  Home: undefined;
+  Login: undefined;
+  RegisterScreen: undefined;
+  // Add other screens here
 };
