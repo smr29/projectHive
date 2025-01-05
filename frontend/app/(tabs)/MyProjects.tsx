@@ -1,103 +1,86 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, FlatList, Alert, TextInput } from 'react-native';
-import { Appbar, Card, Button } from 'react-native-paper';
-import * as DocumentPicker from 'expo-document-picker';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RootTabParamList } from '@/navigation/types';
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet, SafeAreaView, FlatList } from "react-native";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import type { RootTabParamList } from "@/navigation/types";
 
 type Props = {
-  navigation: NativeStackNavigationProp<RootTabParamList, 'MyProjects'>;
+  navigation: NativeStackNavigationProp<RootTabParamList, "MyProjects">;
 };
 
 type Project = {
-  id: string;
-  name: string;
+  _id: string;
+  title: string;
   description: string;
-  startDate: string;
-  endDate: string;
-  dueDate: string;
-  documents: { name: string; uri: string }[];
+  subject: string;
+  status: string;
+  createdBy: { usn: string };
 };
 
 export default function ProjectStatusScreen({ navigation }: Props) {
-  const [projects, setProjects] = useState<Project[]>([
-    {
-      id: '1',
-      name: 'Tax Tracker App',
-      description: 'A simplified solution to track and manage tax payments.',
-      startDate: '2024-12-01',
-      endDate: '2024-12-30',
-      dueDate: '2024-12-30',
-      documents: [],
-    },
-  ]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // const handleUploadDocument = async (projectId: string) => {
-  //   const result = await DocumentPicker.getDocumentAsync();
-  //   if (result.type === 'success') {
-  //     setProjects((prevProjects) =>
-  //       prevProjects.map((project) =>
-  //         project.id === projectId
-  //           ? { ...project, documents: [...project.documents, { name: result.name, uri: result.uri }] }
-  //           : project
-  //       )
-  //     );
-  //     Alert.alert('Success', 'Document uploaded successfully.');
-  //   }
-  // };
+  // Fetch projects from backend
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/project/get-all", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        });
 
-  const renderProjectItem = ({ item }: { item: Project }) => (
-    <Card style={styles.projectCard}>
-      <Text style={styles.projectTitle}>{item.name}</Text>
-      <Text style={styles.projectDetails}>Description: {item.description}</Text>
-      <Text style={styles.projectDetails}>Start Date: {item.startDate}</Text>
-      <Text style={styles.projectDetails}>End Date: {item.endDate}</Text>
-      <Text style={styles.projectDetails}>Due Date: {item.dueDate}</Text>
-      <Text style={styles.projectDetails}>
-        Days Remaining:{' '}
-        {Math.max(
-          Math.ceil((new Date(item.dueDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)),
-          0
-        )}
+        if (response.ok) {
+          const data = await response.json();
+          setProjects(data.projects);
+          console.log("Projects:", data.projects);
+        } else {
+          const errorData = await response.json();
+          console.log("Error:", errorData);
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      } finally {
+        setIsLoading(false); // Set loading to false after fetching
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const renderProject = ({ item }: { item: Project }) => (
+    <View style={styles.projectContainer}>
+      <Text style={styles.projectTitle}>{item.title}</Text>
+      <Text style={styles.projectDescription}>{item.description}</Text>
+      <Text style={styles.projectInfo}>
+        <Text style={styles.label}>Subject: </Text>
+        {item.subject}
       </Text>
-
-      <View style={styles.cardActions}>
-        <TouchableOpacity
-          style={styles.uploadButton}
-          // onPress={() => handleUploadDocument(item.id)}
-        >
-          <Text style={styles.buttonText}>Upload Document</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Uploaded Documents */}
-      <Text style={styles.documentsHeader}>Uploaded Documents:</Text>
-      {item.documents.length === 0 ? (
-        <Text style={styles.noDocumentsText}>No documents uploaded yet.</Text>
-      ) : (
-        item.documents.map((doc, index) => (
-          <Text key={index} style={styles.documentName}>
-            - {doc.name}
-          </Text>
-        ))
-      )}
-    </Card>
+      <Text style={styles.projectInfo}>
+        <Text style={styles.label}>Status: </Text>
+        {item.status}
+      </Text>
+      <Text style={styles.projectInfo}>
+        <Text style={styles.label}>Created By: </Text>
+        {item.createdBy.usn}
+      </Text>
+    </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Appbar.Header style={styles.header}>
-        {/* <Appbar.Action icon="menu" onPress={() => {}} /> */}
-        <Appbar.Content title="My Projects" titleStyle={styles.headerTitle} />
-      </Appbar.Header>
-
-      <FlatList
-        data={projects}
-        keyExtractor={(item) => item.id}
-        renderItem={renderProjectItem}
-        contentContainerStyle={styles.listContainer}
-        ListEmptyComponent={<Text style={styles.emptyText}>No projects found.</Text>}
-      />
+      {isLoading ? (
+        <Text style={styles.loadingText}>Loading projects...</Text>
+      ) : projects.length > 0 ? (
+        <FlatList
+          data={projects}
+          renderItem={renderProject}
+          keyExtractor={(item) => item._id} // Use _id as the key
+        />
+      ) : (
+        <Text style={styles.noProjectsText}>No projects found.</Text>
+      )}
     </SafeAreaView>
   );
 }
@@ -105,74 +88,49 @@ export default function ProjectStatusScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  header: {
-    backgroundColor: '#057C7C',
-    elevation: 4,
-  },
-  headerTitle: {
-    color: 'white',
-    fontSize: 20,
-  },
-  listContainer: {
+    backgroundColor: "#fff",
     padding: 16,
   },
-  projectCard: {
-    backgroundColor: '#F9FAFB',
+  loadingText: {
+    fontSize: 18,
+    textAlign: "center",
+    marginTop: 20,
+    color: "#555",
+  },
+  noProjectsText: {
+    fontSize: 18,
+    textAlign: "center",
+    marginTop: 20,
+    color: "#999",
+  },
+  projectContainer: {
+    backgroundColor: "#f9f9f9",
     padding: 16,
+    marginBottom: 12,
     borderRadius: 8,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
   },
   projectTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#1F2937',
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
   },
-  projectDetails: {
+  projectDescription: {
     fontSize: 14,
-    color: '#374151',
+    color: "#555",
+    marginVertical: 4,
+  },
+  projectInfo: {
+    fontSize: 14,
+    color: "#777",
     marginTop: 4,
   },
-  cardActions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginTop: 16,
-  },
-  uploadButton: {
-    backgroundColor: '#2563EB',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  documentsHeader: {
-    fontSize: 16,
-    color: '#374151',
-    marginTop: 16,
-    fontWeight: '600',
-  },
-  noDocumentsText: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginTop: 8,
-  },
-  documentName: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginTop: 4,
-    marginLeft: 8,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: '#6B7280',
-    textAlign: 'center',
-    marginTop: 32,
+  label: {
+    fontWeight: "bold",
+    color: "#444",
   },
 });

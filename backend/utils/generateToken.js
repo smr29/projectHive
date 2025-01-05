@@ -1,7 +1,7 @@
-import env from "dotenv"
-import jwt from "jsonwebtoken"
+import env from "dotenv";
+import jwt from "jsonwebtoken";
 
-env.config()
+env.config();
 
 const createSecretToken = (id) => {
   return jwt.sign({ id }, process.env.TOKEN_KEY, {
@@ -9,4 +9,4 @@ const createSecretToken = (id) => {
   });
 };
 
-export default createSecretToken
+export default createSecretToken;

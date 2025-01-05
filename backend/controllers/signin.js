@@ -1,7 +1,7 @@
-import User from "../database/model/user.js"; 
-import bcrypt from "bcrypt"; 
-import env from "dotenv"; 
-import createSecretToken from '../utils/generateToken.js';
+import User from "../database/model/user.js";
+import bcrypt from "bcrypt";
+import env from "dotenv";
+import createSecretToken from "../utils/generateToken.js";
 
 env.config();
 
