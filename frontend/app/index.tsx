@@ -3,16 +3,18 @@ import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import { Appbar, Card, Title, Paragraph, Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import type { RootStackParamList } from "../../navigation/types";
+import type { RootStackParamList } from "../navigation/types";
+import { useRouter } from "expo-router";
 
 const App = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  //const navigation =
+    // useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const router = useRouter()
 
   return (
     <View style={styles.container}>
       {/* Header Section */}
-      <Appbar.Header style={styles.header}>
+      {/* <Appbar.Header style={styles.header}>
         <Appbar.Action
           icon={() => (
             <Image
@@ -25,7 +27,7 @@ const App = () => {
           style={styles.logoAction}
         />
         <Appbar.Content title="Project Hive" titleStyle={styles.headerTitle} />
-      </Appbar.Header>
+      </Appbar.Header> */}
 
       {/* Welcome Section */}
       <View style={styles.greetingSection}>
@@ -40,7 +42,7 @@ const App = () => {
           mode="contained"
           style={styles.button}
           labelStyle={styles.buttonText}
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => router.replace("/LoginScreen")}
         >
           Login
         </Button>
@@ -48,7 +50,7 @@ const App = () => {
           mode="outlined"
           style={styles.outlinedButton}
           labelStyle={styles.outlinedButtonText}
-          onPress={() => navigation.navigate("RegisterScreen")}
+          onPress={() => router.replace("/RegisterScreen")}
         >
           Register
         </Button>

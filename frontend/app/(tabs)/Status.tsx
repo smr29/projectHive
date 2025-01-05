@@ -1,3 +1,5 @@
+import { RootTabParamList } from "@/navigation/types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -18,7 +20,11 @@ interface Project {
   subject: string;
 }
 
-const MyProjectsScreen = () => {
+type Props = {
+  navigation: NativeStackNavigationProp<RootTabParamList, "ProjectStatus">;
+};
+
+const ProjectStatusScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
@@ -29,7 +35,7 @@ const MyProjectsScreen = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch("http://localhost:8000/project/all"); // Replace with your API URL
+        const response = await fetch("http://192.168.29.98:8000/project/all"); // Replace with your API URL
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
         }
@@ -43,7 +49,7 @@ const MyProjectsScreen = () => {
     };
 
     fetchProjects();
-  }, []);
+  }, [projects]);
 
   const openModal = (project: Project) => {
     setSelectedProject(project);
@@ -76,7 +82,7 @@ const MyProjectsScreen = () => {
     <View style={styles.container}>
       {/* Header */}
       <Appbar.Header style={styles.header}>
-        <Appbar.Content title="View Projects" titleStyle={styles.headerTitle} />
+        <Appbar.Content title="View All Projects" titleStyle={styles.headerTitle} />
       </Appbar.Header>
 
       {/* Projects List */}
@@ -208,4 +214,4 @@ const styles = StyleSheet.create({
   errorText: { color: "red", fontSize: 16 },
 });
 
-export default MyProjectsScreen;
+export default ProjectStatusScreen;

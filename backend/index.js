@@ -15,7 +15,7 @@ Connection();
 
 // CORS configuration
 const corsOptions = {
-  origin: "http://localhost:8081", // Frontend URL
+  origin: "http://192.168.29.98:8081", // Frontend URL
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true, // Allow cookies to be sent with requests

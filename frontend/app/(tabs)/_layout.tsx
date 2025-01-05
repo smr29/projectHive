@@ -1,20 +1,15 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "./index";
 import { View, Text } from "react-native";
-import ProjectStatus from "./Status";
-import AddProject from "./AddProject";
-import Projects from "./MyProjects";
-import LoginScreen from "./LoginScreen";
-import RegisterScreen from "./RegisterScreen";
+import RegisterTeamScreen from "./AddProject";
+import JoinTeamScreen from "./join";
+import MyProjectsScreen from "./MyProjects";
+import ProjectStatusScreen from "./Status";
+import Feather from '@expo/vector-icons/Feather';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
-
-const HomeScreen = () => (
-  <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-    <Text>Welcome to Project Hive!</Text>
-  </View>
-);
 
 export default function TabsLayout() {
   return (
@@ -26,31 +21,41 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: "#A0D8D0",
       }}
     >
-      <Tab.Screen name="Home" component={Home} options={{ title: "Home" }} />
       <Tab.Screen
         name="ProjectStatus"
-        component={ProjectStatus}
-        options={{ title: "Status" }}
+        component={ProjectStatusScreen}
+        options={{ title: "All Projects", 
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="question" size={24} color="white" />
+          ),
+         }}
       />
       <Tab.Screen
         name="AddProject"
-        component={AddProject}
-        options={{ title: "Add Project" }}
+        component={RegisterTeamScreen}
+        options={{ title: "Add Project", 
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="plus-circle" size={24} color="white" />
+          ),
+         }}
       />
       <Tab.Screen
         name="MyProjects"
-        component={Projects}
-        options={{ title: "My Projects" }}
+        component={MyProjectsScreen}
+        options={{ title: "My Projects", 
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="eye-outline" size={24} color="white" />
+          ),
+         }}
       />
       <Tab.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ title: "Login" }}
-      />
-      <Tab.Screen
-        name="RegisterScreen"
-        component={RegisterScreen}
-        options={{ title: "Register Screen" }}
+        name="JoinTeam"
+        component={JoinTeamScreen}
+        options={{ title: "Join Team",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person" size={24} color="white" />
+          ),
+         }}
       />
     </Tab.Navigator>
   );

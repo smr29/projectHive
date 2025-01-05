@@ -38,7 +38,7 @@ export default function LoginScreen() {
     try {
       // Send the login request to the API
       const response = await axios.post(
-        "http://localhost:8000/auth/signin",
+        "http://192.168.29.98:8000/auth/signin",
         { email, password },
         { withCredentials: true } // Ensure cookies are sent and received
       );

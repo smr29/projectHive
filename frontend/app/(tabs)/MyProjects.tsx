@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, SafeAreaView, FlatList } from "react-native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootTabParamList } from "@/navigation/types";
+import { Appbar } from "react-native-paper";
 
 type Props = {
   navigation: NativeStackNavigationProp<RootTabParamList, "MyProjects">;
@@ -16,7 +17,7 @@ type Project = {
   createdBy: { usn: string };
 };
 
-export default function ProjectStatusScreen({ navigation }: Props) {
+export default function MyProjectsScreen({ navigation }: Props) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -24,7 +25,7 @@ export default function ProjectStatusScreen({ navigation }: Props) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch("http://localhost:8000/project/get-all", {
+        const response = await fetch("http://192.168.29.98:8000/project/get-all", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -47,7 +48,7 @@ export default function ProjectStatusScreen({ navigation }: Props) {
       }
     };
     fetchUser();
-  }, []);
+  }, [projects]);
 
   const renderProject = ({ item }: { item: Project }) => (
     <View style={styles.projectContainer}>
@@ -70,7 +71,11 @@ export default function ProjectStatusScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {isLoading ? (
+      <Appbar.Header style={styles.header}>
+          <Appbar.Content title="My Projects" titleStyle={styles.headerTitle} />
+        </Appbar.Header>
+
+        {isLoading ? (
         <Text style={styles.loadingText}>Loading projects...</Text>
       ) : projects.length > 0 ? (
         <FlatList
@@ -89,7 +94,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    padding: 16,
+  },
+  header: {
+    backgroundColor: "#057C7C",
+    elevation: 4
+  },
+  headerTitle: {
+    color: "white",
+    fontSize: 20,
   },
   loadingText: {
     fontSize: 18,

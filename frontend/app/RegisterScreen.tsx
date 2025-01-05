@@ -33,7 +33,7 @@ export default function RegisterScreen() {
     try {
       // Send the user data to the signup API
       const response = await axios.post(
-        "http://localhost:8000/auth/signup",
+        "http://192.168.29.98:8000/auth/signup",
         formData
       );
 
@@ -152,20 +152,22 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#fff",
   },
   header: {
     padding: 24,
+    backgroundColor: "#057C7C",
+    alignItems: "center",
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#1F2937",
+    color: "#fff",
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: "#6B7280",
+    color: "#E0F2F1",
   },
   form: {
     padding: 24,
@@ -191,14 +193,14 @@ const styles = StyleSheet.create({
     marginTop: "auto",
   },
   button: {
-    backgroundColor: "#7C3AED",
+    backgroundColor: "#057C7C",
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
     marginBottom: 16,
   },
   buttonText: {
-    color: "#FFFFFF",
+    color: "#fff",
     fontSize: 16,
     fontWeight: "600",
   },
@@ -210,7 +212,7 @@ const styles = StyleSheet.create({
     color: "#6B7280",
   },
   link: {
-    color: "#7C3AED",
+    color: "#057C7C",
     fontWeight: "500",
   },
   errorText: {

@@ -16,7 +16,7 @@ import type { RootTabParamList } from "@/navigation/types";
 import axios from "axios";
 
 type Props = {
-  navigation: NativeStackNavigationProp<RootTabParamList, "RegisterTeam">;
+  navigation: NativeStackNavigationProp<RootTabParamList, "AddProject">;
 };
 
 export default function RegisterTeamScreen({ navigation }: Props) {
@@ -58,7 +58,7 @@ export default function RegisterTeamScreen({ navigation }: Props) {
     try {
       // Send data to the backend
       const response = await axios.post(
-        "http://localhost:8000/project/create",
+        "http://192.168.29.98:8000/project/create",
         {
           title,
           description,
@@ -219,19 +219,18 @@ const styles = StyleSheet.create({
   scrollContainer: { flexGrow: 1, paddingBottom: 20 },
   header: {
     backgroundColor: "#057C7C",
-    elevation: 4,
+    elevation: 4
   },
   headerTitle: {
     color: "white",
     fontSize: 20,
   },
-  inputContainer: { marginBottom: 16 },
+  inputContainer: { marginTop: 17, marginBottom: 15, marginHorizontal: 15 },
   label: { color: "#374151", fontSize: 14, fontWeight: "600", marginBottom: 8 },
   pickerWrapper: {
     borderWidth: 1,
     borderColor: "#9CA3AF",
     borderRadius: 10,
-    marginBottom: 16,
   },
   picker: { color: "#374151" },
   input: {
@@ -240,15 +239,15 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 12,
     fontSize: 16,
-    color: "#374151",
-    marginBottom: 8,
+    color: "#374151"    
   },
   button: {
     backgroundColor: "#057C7C",
     padding: 10,
     borderRadius: 10,
     alignItems: "center",
-    marginBottom: 16,
+    marginHorizontal: 15,
+    marginTop: 30
   },
   buttonText: { color: "#FFFFFF", fontSize: 16, fontWeight: "bold" },
   teamCodeContainer: {

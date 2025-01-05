@@ -3,9 +3,9 @@ export type RootTabParamList = {
   EditProject: { project: Project };
   AddProject: undefined;
   RegisterTeam: undefined;
-  Welcome: undefined;
   JoinTeam: undefined; 
   MyProjects: undefined;
+  ProjectStatus: undefined;
 };
   
 export type Project = {
