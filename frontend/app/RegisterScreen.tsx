@@ -9,8 +9,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useRouter } from "expo-router";
-import axios from "axios"; // For API calls
-import AsyncStorage from "@react-native-async-storage/async-storage"; // For token storage
+import axios from "axios"; 
+import AsyncStorage from "@react-native-async-storage/async-storage"; 
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -25,26 +25,21 @@ export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Handle Register and store token
   const handleRegister = async () => {
     setLoading(true);
-    setError(""); // Clear previous errors before trying to register
+    setError("");
 
     try {
-      // Send the user data to the signup API
       const response = await axios.post(
-        "http://192.168.29.98:8000/auth/signup",
+        "https://fa82-2409-40f2-129-fac4-fc8a-2113-6d5a-51ff.ngrok-free.app/auth/signup",
         formData
       );
 
-      // On successful signup, the response contains the user and token
       const { token } = response.data;
 
       if (token) {
-        // Store the token in AsyncStorage (for native)
         await AsyncStorage.setItem("authToken", token);
 
-        // Navigate to the next screen (e.g., AddProject)
         router.replace("/AddProject");
       } else {
         setError("Token not found in response.");
@@ -56,7 +51,6 @@ export default function RegisterScreen() {
     }
   };
 
-  // Reset form fields on refresh or re-render
   useEffect(() => {
     setFormData({
       email: "",
@@ -143,7 +137,6 @@ export default function RegisterScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Ensure error is a string before rendering */}
       {error ? <Text style={styles.errorText}>{String(error)}</Text> : null}
     </SafeAreaView>
   );

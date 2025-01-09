@@ -14,7 +14,7 @@ router.post("/create", createProject);
 router.post("/join", joinProject);
 router.patch("/edit/:projectId", editProject);
 router.get("/all", viewAllProjects);
-router.get("/get-all", viewUserProjects);
+router.post("/get-all", viewUserProjects);
 router.get("/filter", filterProjects);
 
 export default router;

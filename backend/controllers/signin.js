@@ -19,17 +19,7 @@ const signin = async (req, res) => {
 
     const token = createSecretToken(user.usn);
 
-    // Uncomment if you want to send a cookie with the token
-    // res.cookie("token", token, {
-    //   domain: process.env.FRONTEND_URL,
-    //   path: "/",
-    //   expires: new Date(Date.now() + 86400000), // Expires in 1 day
-    //   secure: true,
-    //   httpOnly: true,
-    //   sameSite: "None",
-    // });
-
-    res.json({ token });
+    res.json({ token, user });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error", error });
   }

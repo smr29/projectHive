@@ -1,16 +1,9 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootTabParamList } from '@/navigation/types';
 import { Appbar } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootTabParamList, 'JoinTeam'>;
@@ -20,38 +13,65 @@ export default function JoinTeamScreen({ navigation }: Props) {
   const [formData, setFormData] = useState({
     teamCode: '',
   });
+  const [userId, setUserId] = useState<string | null>(null); 
 
-  const handleJoinTeam = () => {
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        const storedUserId = await AsyncStorage.getItem('userId'); 
+        if (storedUserId) {
+          setUserId(storedUserId);
+        } else {
+          // console.error('User ID not found in AsyncStorage');
+        }
+      } catch (error) {
+        console.error('Error fetching user ID from AsyncStorage:', error);
+      }
+    };
+
+    fetchUserId();
+  }, []); 
+
+  const handleJoinTeam = async () => {
     const { teamCode } = formData;
 
     if (!teamCode) {
-      Alert.alert('Error', 'Both Team Code and USN are required.');
+      Alert.alert('Error', 'Project Code is required.');
       return;
     }
 
-    // Mock logic to check if the team code and USN are valid
-    const isValidTeamCode = teamCode.length === 6; // Example validation
-    // const isValidUSN = usn.length === 10; // Example validation
-
-    if (!isValidTeamCode) {
-      Alert.alert('Error', 'Invalid Team Code.');
+    if (!userId) {
+      Alert.alert('Error', 'User ID not found.');
       return;
     }
 
-    // if (!isValidUSN) {
-    //   Alert.alert('Error', 'Invalid USN.');
-    //   return;
-    // }
+    try {
+      const response = await fetch('https://fa82-2409-40f2-129-fac4-fc8a-2113-6d5a-51ff.ngrok-free.app/project/join', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, code: teamCode }), 
+      });
 
-    // If valid, proceed to join the team
-    Alert.alert('Success', `Successfully joined the team with code: ${teamCode}`);
-    // navigation.navigate('Home');
+      const data = await response.json();
+
+      if (!response.ok) {
+        Alert.alert('Error', data.message || 'Failed to join the project.');
+        return;
+      }
+
+      Alert.alert('Success', data.message);
+      navigation.navigate('MyProjects');
+    } catch (error) {
+      console.error('Error joining project:', error);
+      Alert.alert('Error', 'An unexpected error occurred.');
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <Appbar.Header style={styles.header}>
-        {/* <Appbar.Action icon="menu" onPress={() => {}} /> */}
         <Appbar.Content title="Join Project" titleStyle={styles.headerTitle} />
       </Appbar.Header>
 
@@ -67,17 +87,6 @@ export default function JoinTeamScreen({ navigation }: Props) {
           />
         </View>
 
-        {/* <View style={styles.inputContainer}>
-          <Text style={styles.label}>USN</Text>
-          <TextInput
-            style={styles.input}
-            value={formData.usn}
-            onChangeText={(text) => setFormData({ ...formData, usn: text })}
-            placeholder="Enter your USN"
-            placeholderTextColor="#9CA3AF"
-          />
-        </View> */}
-
         <TouchableOpacity style={styles.button} onPress={handleJoinTeam}>
           <Text style={styles.buttonText}>Join Team</Text>
         </TouchableOpacity>
@@ -91,12 +100,7 @@ const styles = StyleSheet.create({
   headerTitle: { color: 'white', fontSize: 20 },
   header: {
     backgroundColor: '#057C7C',
-    
-    // borderBottomLeftRadius: 20,
-    // borderBottomRightRadius: 20,
   },
-  title: { color: '#FFFFFF', fontSize: 28, fontWeight: 'bold', textAlign: 'center' },
-  subtitle: { color: '#E0F2F1', fontSize: 16, textAlign: 'center' },
   form: { padding: 20 },
   inputContainer: { marginBottom: 16 },
   label: { color: '#374151', fontSize: 14, fontWeight: '600', marginBottom: 8 },

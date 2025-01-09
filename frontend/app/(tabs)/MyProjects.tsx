@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, FlatList } from "react-native";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootTabParamList } from "@/navigation/types";
 import { Appbar } from "react-native-paper";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootTabParamList, "MyProjects">;
@@ -19,37 +20,41 @@ type Project = {
 
 export default function MyProjectsScreen({ navigation }: Props) {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Fetch projects from backend
+  const [isLoading, setIsLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUserProjects = async () => {
+  
       try {
-        const response = await fetch("http://192.168.29.98:8000/project/get-all", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setProjects(data.projects);
-          console.log("Projects:", data.projects);
+        const storedUserId = await AsyncStorage.getItem('userId'); 
+        if (storedUserId) {
+          setUserId(storedUserId); 
+          const response = await fetch("https://fa82-2409-40f2-129-fac4-fc8a-2113-6d5a-51ff.ngrok-free.app/project/get-all", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId: storedUserId }) 
+          });
+  
+          if (response.ok) {
+            const data = await response.json();
+            setProjects(data.projects); 
+            console.log("Fetched Projects:", data.projects);
+          } else {
+            const errorData = await response.json();
+            console.error("Error fetching projects:", errorData.message || "Unknown error");
+          }
         } else {
-          const errorData = await response.json();
-          console.log("Error:", errorData);
+          // console.error('User ID not found in AsyncStorage');
         }
       } catch (error) {
-        console.error("Error fetching projects:", error);
-      } finally {
-        setIsLoading(false); // Set loading to false after fetching
-      }
+        console.error('Error fetching user ID or projects:', error);
+      } 
     };
-    fetchUser();
-  }, [projects]);
-
+  
+    fetchUserProjects();
+  }, [userId, navigation]); 
   const renderProject = ({ item }: { item: Project }) => (
     <View style={styles.projectContainer}>
       <Text style={styles.projectTitle}>{item.title}</Text>
@@ -81,7 +86,7 @@ export default function MyProjectsScreen({ navigation }: Props) {
         <FlatList
           data={projects}
           renderItem={renderProject}
-          keyExtractor={(item) => item._id} // Use _id as the key
+          keyExtractor={(item) => item._id} 
         />
       ) : (
         <Text style={styles.noProjectsText}>No projects found.</Text>

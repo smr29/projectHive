@@ -7,7 +7,6 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = () => {
     console.log('Login Pressed');
-    // Add API call for login here
   };
 
   return (

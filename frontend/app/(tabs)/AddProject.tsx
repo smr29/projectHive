@@ -14,6 +14,7 @@ import { Appbar } from "react-native-paper";
 import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import type { RootTabParamList } from "@/navigation/types";
 import axios from "axios";
+import * as Clipboard from 'expo-clipboard';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootTabParamList, "AddProject">;
@@ -26,15 +27,14 @@ export default function RegisterTeamScreen({ navigation }: Props) {
     subject: "",
     status: "",
     code: "",
-    created_by: "", // This could be the logged-in user or hardcoded for testing
+    created_by: "", 
     members: "",
-    createdAt: new Date().toISOString(), // Set the creation date to current time
+    createdAt: new Date().toISOString(), 
   });
   const handleRegister = async () => {
     const { title, description, subject, status, created_by, members, code } =
       formData;
 
-    // Validate form inputs
     if (
       !title ||
       !description ||
@@ -47,39 +47,46 @@ export default function RegisterTeamScreen({ navigation }: Props) {
       return;
     }
 
-    // Format members into an array (assumes comma-separated USNs)
     const membersArray = members.split(",").map((usn) => usn.trim());
 
-    // Call generateTeamCode if code is not set
-    if (!code) {
-      generateTeamCode();
-    }
-
     try {
-      // Send data to the backend
       const response = await axios.post(
-        "http://192.168.29.98:8000/project/create",
+        "https://fa82-2409-40f2-129-fac4-fc8a-2113-6d5a-51ff.ngrok-free.app/project/create",
         {
           title,
           description,
           subject,
           status,
-          createdByUsn: created_by, // Use correct key here
-          membersUsn: membersArray, // Use correct key here
+          createdByUsn: created_by,
+          membersUsn: membersArray, 
         }
       );
 
-      // Handle successful registration
       if (response.status === 201) {
         const { project } = response.data;
 
+        const message = project.code
         Alert.alert(
-          "Success",
-          `Team registered successfully for course "${subject}"\nProject Code: ${project.code}`
+          "Project Code",
+          message,
+          [
+            { text: "OK" },
+            { text: "Copy", onPress: () => handleCopy(message) }
+          ]
         );
 
-        // Navigate to the next screen
-        navigation.navigate("JoinTeam");
+        setFormData({
+          title: "",
+          description: "",
+          subject: "",
+          status: "",
+          code: "",
+          created_by: "", 
+          members: "",
+          createdAt: new Date().toISOString(),
+        })
+
+        navigation.navigate("MyProjects", { refresh: true });        
       }
     } catch (error: any) {
       console.error(
@@ -93,14 +100,9 @@ export default function RegisterTeamScreen({ navigation }: Props) {
     }
   };
 
-  const generateTeamCode = () => {
-    const chars =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let code = "";
-    for (let i = 0; i < 6; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    setFormData({ ...formData, code }); // Set generated team code to state
+  const handleCopy = (text: string) => {
+    Clipboard.setString(text);
+    Alert.alert("Copied to Clipboard", text);
   };
 
   return (
@@ -110,7 +112,6 @@ export default function RegisterTeamScreen({ navigation }: Props) {
           <Appbar.Content title="Add Project" titleStyle={styles.headerTitle} />
         </Appbar.Header>
 
-        {/* Project Title */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Title</Text>
           <TextInput
@@ -121,8 +122,6 @@ export default function RegisterTeamScreen({ navigation }: Props) {
             placeholderTextColor="#9CA3AF"
           />
         </View>
-
-        {/* Project Description */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Project Description</Text>
           <TextInput
@@ -136,7 +135,6 @@ export default function RegisterTeamScreen({ navigation }: Props) {
           />
         </View>
 
-        {/* Subject Selection */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Course</Text>
           <View style={styles.pickerWrapper}>
@@ -156,7 +154,6 @@ export default function RegisterTeamScreen({ navigation }: Props) {
           </View>
         </View>
 
-        {/* Project Status */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Project Status</Text>
           <TextInput
@@ -168,7 +165,6 @@ export default function RegisterTeamScreen({ navigation }: Props) {
           />
         </View>
 
-        {/* Created by */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Created By (Enter USN)</Text>
           <TextInput
@@ -182,7 +178,6 @@ export default function RegisterTeamScreen({ navigation }: Props) {
           />
         </View>
 
-        {/* Members */}
         <View style={styles.inputContainer}>
           <Text style={styles.label}>
             Members (Enter USNs separated by commas)
@@ -196,12 +191,10 @@ export default function RegisterTeamScreen({ navigation }: Props) {
           />
         </View>
 
-        {/* Register Button */}
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
           <Text style={styles.buttonText}>Register & Generate Code</Text>
         </TouchableOpacity>
 
-        {/* Display generated team code */}
         {formData.code ? (
           <View style={styles.teamCodeContainer}>
             <Text style={styles.teamCodeText}>

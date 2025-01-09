@@ -10,31 +10,29 @@ const PORT = 8000;
 
 const app = express();
 
-// Connect to database
 Connection();
 
-// CORS configuration
 const corsOptions = {
-  origin: "http://192.168.29.98:8081", // Frontend URL
+  origin: "*", 
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true, // Allow cookies to be sent with requests
-  preflightContinue: false, // Don't manually handle preflight requests
+  credentials: true, 
+  preflightContinue: false, 
 };
 
-// Apply CORS middleware
 app.use(cors(corsOptions));
 
-// Body parser middleware
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Routes
+app.get("/", (req, res) => {
+  res.send("Backend is working!");
+});
+
 app.use("/auth", authRoute);
 app.use("/project", projectRoute);
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on PORT ${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server is running on http://0.0.0.0:${PORT}`);
 });

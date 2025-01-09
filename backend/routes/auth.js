@@ -1,5 +1,5 @@
-import express from "express"; // Correct default import for express
-import logout from "../controllers/signin.js"; // Add `.js` extensions for ES modules
+import express from "express"; 
+import logout from "../controllers/signin.js"; 
 import signup from "../controllers/signup.js";
 import signin from "../controllers/signin.js";
 

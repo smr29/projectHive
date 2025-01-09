@@ -7,35 +7,15 @@ import type { RootStackParamList } from "../navigation/types";
 import { useRouter } from "expo-router";
 
 const App = () => {
-  //const navigation =
-    // useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const router = useRouter()
 
   return (
     <View style={styles.container}>
-      {/* Header Section */}
-      {/* <Appbar.Header style={styles.header}>
-        <Appbar.Action
-          icon={() => (
-            <Image
-              source={{
-                uri: "https://as1.ftcdn.net/v2/jpg/04/97/12/42/1000_F_497124214_j74XBvE7oV59ugnJkDUqQduXA5WbGxBV.jpg",
-              }}
-              style={styles.logo}
-            />
-          )}
-          style={styles.logoAction}
-        />
-        <Appbar.Content title="Project Hive" titleStyle={styles.headerTitle} />
-      </Appbar.Header> */}
-
-      {/* Welcome Section */}
       <View style={styles.greetingSection}>
         <Text style={styles.greetingText}>Welcome to Project Hive</Text>
         <Text style={styles.subText}>Manage your projects seamlessly</Text>
       </View>
 
-      {/* Login/Register Section */}
       <View style={styles.authSection}>
         <Text style={styles.authPrompt}>Get Started</Text>
         <Button
@@ -56,7 +36,6 @@ const App = () => {
         </Button>
       </View>
 
-      {/* Cards Section (Home Screen) */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.sectionTitle}>Key Features</Text>
         <View style={styles.summaryContainer}>

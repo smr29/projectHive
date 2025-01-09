@@ -11,9 +11,8 @@ import {
 } from "react-native";
 import { Appbar, Card, IconButton } from "react-native-paper";
 
-// Define the type for a project
 interface Project {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   status: string;
@@ -31,11 +30,10 @@ const ProjectStatusScreen = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch data from the backend
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await fetch("http://192.168.29.98:8000/project/all"); // Replace with your API URL
+        const response = await fetch("https://fa82-2409-40f2-129-fac4-fc8a-2113-6d5a-51ff.ngrok-free.app/project/all"); 
         if (!response.ok) {
           throw new Error("Failed to fetch projects");
         }
@@ -80,23 +78,20 @@ const ProjectStatusScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <Appbar.Header style={styles.header}>
         <Appbar.Content title="View All Projects" titleStyle={styles.headerTitle} />
       </Appbar.Header>
 
-      {/* Projects List */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {projects.map((project) => (
-          <Card key={project.id} style={styles.card}>
-            <View style={styles.cardContent}>
+          <Card key={project._id} style={styles.card}>
+            <View key={project._id} style={styles.cardContent}>
               <View style={styles.projectDetails}>
                 <Text style={styles.projectTitle}>{project.title}</Text>
                 <Text style={styles.projectDescription}>
                   {project.description}
                 </Text>
               </View>
-              {/* Status and View Button */}
               <View style={styles.statusContainer}>
                 <View
                   style={[
@@ -122,7 +117,6 @@ const ProjectStatusScreen = () => {
         ))}
       </ScrollView>
 
-      {/* Modal for viewing project details */}
       {selectedProject && (
         <Modal
           visible={isModalVisible}

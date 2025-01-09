@@ -12,10 +12,9 @@ export const authenticate = (req, res, next) => {
 
   const token = authHeader.split(" ")[1];
   try {
-    // Verify the JWT token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Ensure your JWT_SECRET is correct
-    req.user = decoded; // Attach decoded data (user email or ID) to req.user
-    next(); // Proceed to the next middleware or route handler
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+    req.user = decoded; 
+    next();
   } catch (error) {
     return res.status(401).json({ message: "Unauthorized. Invalid token." });
   }

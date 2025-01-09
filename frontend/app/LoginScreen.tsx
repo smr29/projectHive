@@ -9,26 +9,24 @@ import {
   TextInput,
   Alert,
 } from "react-native";
-import { useRouter } from "expo-router"; // Import the router
-import axios from "axios"; // For API calls
-import AsyncStorage from "@react-native-async-storage/async-storage"; // For token storage
-import Cookies from "js-cookie"; // For web cookie handling (use only for web)
+import { useRouter } from "expo-router"; 
+import axios from "axios"; 
+import AsyncStorage from "@react-native-async-storage/async-storage"; 
+import Cookies from "js-cookie";
 
 export default function LoginScreen() {
-  const router = useRouter(); // Use the router for navigation
+  const router = useRouter(); 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  // Handle Login and store token in cookies or AsyncStorage
   const handleLogin = async () => {
     setIsLoading(true);
 
     const { email, password } = formData;
 
-    // Basic validation
     if (!email || !password) {
       Alert.alert("Error", "Please fill in both fields.");
       setIsLoading(false);
@@ -36,25 +34,22 @@ export default function LoginScreen() {
     }
 
     try {
-      // Send the login request to the API
       const response = await axios.post(
-        "http://192.168.29.98:8000/auth/signin",
+        "https://fa82-2409-40f2-129-fac4-fc8a-2113-6d5a-51ff.ngrok-free.app/auth/signin",
         { email, password },
-        { withCredentials: true } // Ensure cookies are sent and received
+        { withCredentials: true } 
       );
 
-      const { token } = response.data;
+      const { token, user } = response.data;
 
-      if (token) {
-        // Store the token in AsyncStorage (for React Native)
+      if (token && user) {
         await AsyncStorage.setItem("authToken", token);
+        await AsyncStorage.setItem("userId", user._id);
 
-        // Optionally store token in cookies (for web)
         if (typeof window !== "undefined" && window.document) {
           Cookies.set("token", token);
         }
 
-        // Navigate to the AddProject screen
         Alert.alert("Success", "Logged in successfully!");
         router.replace("/AddProject");
       } else {
@@ -107,7 +102,7 @@ export default function LoginScreen() {
         <TouchableOpacity
           style={[styles.button, isLoading && styles.loadingButton]}
           onPress={handleLogin}
-          disabled={isLoading} // Disable button while loading
+          disabled={isLoading}
         >
           <Text style={styles.buttonText}>
             {isLoading ? "Loading..." : "Login"}
@@ -116,7 +111,7 @@ export default function LoginScreen() {
 
         <TouchableOpacity
           style={styles.linkButton}
-          onPress={() => router.replace("/RegisterScreen")} // Use router.replace for navigation
+          onPress={() => router.replace("/RegisterScreen")}
         >
           <Text style={styles.linkText}>
             Don't have an account? <Text style={styles.link}>Register</Text>
@@ -178,7 +173,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   loadingButton: {
-    backgroundColor: "#A0D8D0", // Light teal when loading
+    backgroundColor: "#A0D8D0",
   },
   buttonText: {
     color: "#fff",

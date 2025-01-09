@@ -4,7 +4,7 @@ export type RootTabParamList = {
   AddProject: undefined;
   RegisterTeam: undefined;
   JoinTeam: undefined; 
-  MyProjects: undefined;
+  MyProjects: { refresh?: boolean };
   ProjectStatus: undefined;
 };
   
@@ -14,8 +14,6 @@ export type Project = {
   description: string;
   subject: string;
   status: string;
-  // teamSize: number;
-  // members: { name: string; usn: string }[];
 };
 
 export type RootStackParamList = {
